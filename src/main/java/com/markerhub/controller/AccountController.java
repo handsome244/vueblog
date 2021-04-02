@@ -7,7 +7,10 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,13 +28,13 @@ public class AccountController {
 
     @PostMapping("/login")
     public Result login(@Validated @RequestBody LoginDTO loginDTO, HttpServletResponse response){
-        return Result.succ(userService.login(loginDTO, response));
+        return Result.success(userService.login(loginDTO, response));
     }
 
     @RequiresAuthentication
     @PostMapping("/logout")
     public Result logout(){
         SecurityUtils.getSubject().logout();
-        return Result.succ(null);
+        return Result.success(null);
     }
 }

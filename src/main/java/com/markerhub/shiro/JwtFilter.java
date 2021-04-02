@@ -1,12 +1,12 @@
 package com.markerhub.shiro;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.markerhub.common.lang.Result;
 import com.markerhub.utils.JwtUtils;
-import com.sun.xml.internal.messaging.saaj.soap.impl.CDATAImpl;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExpiredCredentialsException;
@@ -28,6 +28,7 @@ import java.io.IOException;
  * @date 2021/3/3 16:50
  */
 @Component
+@Slf4j
 public class JwtFilter extends AuthenticatingFilter {
 
     @Autowired
@@ -37,7 +38,7 @@ public class JwtFilter extends AuthenticatingFilter {
     protected AuthenticationToken createToken(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         String jwt = request.getHeader("Authorization");
-        if (StringUtils.isEmpty(jwt)) {
+        if (StrUtil.isEmpty(jwt)) {
             return null;
         }
         return new JwtToken(jwt);
@@ -47,17 +48,18 @@ public class JwtFilter extends AuthenticatingFilter {
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String token = request.getHeader("Authorization");
-        if(StringUtils.isEmpty(token)) {
+        if(StrUtil.isEmpty(token)) {
             return true;
         } else {
             // 判断是否已过期
             Claims claim = jwtUtils.getClaimByToken(token);
+            log.info("claim:{{}}",claim);
             if(claim == null || jwtUtils.isTokenExpired(claim.getExpiration())) {
                 throw new ExpiredCredentialsException("token已失效，请重新登录！");
             }
+            // 执行自动登录
+            return executeLogin(servletRequest, servletResponse);
         }
-        // 执行自动登录
-        return executeLogin(servletRequest, servletResponse);
     }
 
 
@@ -68,7 +70,7 @@ public class JwtFilter extends AuthenticatingFilter {
 
         try {
         Throwable throwable = e.getCause() == null ? e : e.getCause();
-        Result fail = Result.fail(throwable.getMessage());
+        Result fail = Result.error(throwable.getMessage());
         String jsonStr = JSONUtil.toJsonStr(fail);
             httpServletResponse.getWriter().print(jsonStr);
         } catch (IOException ioException) {

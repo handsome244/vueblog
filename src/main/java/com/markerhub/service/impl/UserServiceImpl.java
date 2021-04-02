@@ -1,10 +1,12 @@
 package com.markerhub.service.impl;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.markerhub.common.dto.LoginDTO;
+import com.markerhub.common.lang.Result;
 import com.markerhub.entity.User;
 import com.markerhub.mapper.UserMapper;
 import com.markerhub.service.UserService;
@@ -32,7 +34,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     JwtUtils jwtUtils;
 
     @Override
-    public boolean login(LoginDTO loginDTO, HttpServletResponse response) {
+    public Result login(LoginDTO loginDTO, HttpServletResponse response) {
         String username = loginDTO.getUsername();
         String password = loginDTO.getPassword();
 
@@ -47,6 +49,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String token = jwtUtils.generateToken(user.getId());
         response.setHeader("Authorization", token);
         response.setHeader("Access-control-Expose-Headers", "Authorization");
-        return true;
+        return Result.success(MapUtil.builder()
+                .put("id", user.getId())
+                .put("username", user.getUsername())
+                .put("avatar", user.getAvatar())
+                .put("email", user.getEmail())
+                .put("token",token)
+                .map()
+        );
     }
 }

@@ -2,13 +2,12 @@ package com.markerhub.controller;
 
 
 import com.markerhub.common.lang.Result;
+import com.markerhub.entity.User;
 import com.markerhub.service.UserService;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -27,8 +26,8 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/{id}")
-    public Result test(@PathVariable("id") Long id) {
-        return Result.succ(userService.getById(id));
+    public Result<User> test(@PathVariable("id") Long id) {
+        return Result.success(userService.getById(id));
     }
 
 }

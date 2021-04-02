@@ -21,13 +21,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = ShiroException.class)
     public Result handler(ShiroException e){
         log.error("运行时异常----------------{}",e);
-        return Result.fail("401",e.getMessage(), null);
+        return Result.error(e.getMessage(),401);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = RuntimeException.class)
     public Result handler(RuntimeException e){
         log.error("运行时异常----------------{}",e);
-        return Result.fail(e.getMessage());
+        return Result.error(e.getMessage());
     }
 }

@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.markerhub.entity.User;
 import com.markerhub.service.UserService;
 import com.markerhub.utils.JwtUtils;
+import com.markerhub.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -46,7 +47,7 @@ public class AccountRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         JwtToken jwtToken = (JwtToken)token;
-
+        log.info("jwtToken----------------->{}", jwtToken);
         String userId = jwtUtils.getClaimByToken((String) jwtToken.getPrincipal()).getSubject();
         User user = userService.getById(Long.parseLong(userId));
         if(user == null){
@@ -55,9 +56,7 @@ public class AccountRealm extends AuthorizingRealm {
         if(user.getStatus() == -1){
             throw new LockedAccountException("账户已被锁定");
         }
-        AccountProfile accountProfile = new AccountProfile();
-        BeanUtil.copyProperties(user, accountProfile);
-        return new SimpleAuthenticationInfo(accountProfile,jwtToken.getCredentials(),getName());
+        return new SimpleAuthenticationInfo(user,jwtToken.getCredentials(),getName());
     }
 
     /**

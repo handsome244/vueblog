@@ -1,6 +1,7 @@
 package com.markerhub.service;
 
 import com.markerhub.common.dto.LoginDTO;
+import com.markerhub.common.lang.Result;
 import com.markerhub.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -16,5 +17,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface UserService extends IService<User> {
 
-    boolean login(LoginDTO loginDTO, HttpServletResponse response);
+    /**
+     * 用户登录
+     * @param loginDTO
+     * @param response
+     * @return
+     */
+    Result login(LoginDTO loginDTO, HttpServletResponse response);
 }
