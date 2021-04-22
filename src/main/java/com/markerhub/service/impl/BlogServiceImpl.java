@@ -25,7 +25,7 @@ import static com.markerhub.common.base.BaseIdEntity.STATUS_NORMAL;
 public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements BlogService {
 
     @Override
-    public Pagination<Blog> query(Integer current, Integer size, Pagination<Blog> page) {
+    public Pagination<Blog> query(Long current, Long size, Pagination<Blog> page) {
         LambdaQueryWrapper<Blog> wrapper = Wrappers.lambdaQuery();
         wrapper.orderByDesc(Blog::getCreateTime);
         return page(page, wrapper);

@@ -22,7 +22,7 @@ public interface BlogService extends IService<Blog> {
      * @param page
      * @return
      */
-    Pagination<Blog> query(Integer current, Integer size, Pagination<Blog> page);
+    Pagination<Blog> query(Long current, Long size, Pagination<Blog> page);
 
     /**
      * 新增博客

@@ -9,13 +9,13 @@ import java.io.Serializable;
  * @Description
  * @date 2021/3/9 14:37
  */
-//@Data
-//public class AccountProfile implements Serializable {
-//
-//    private Long id;
-//
-//    private String username;
-//
-//    private String avatar;
-//
-//}
+@Data
+public class AccountProfile implements Serializable {
+
+    private Long id;
+
+    private String username;
+
+    private String avatar;
+
+}

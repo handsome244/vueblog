@@ -22,7 +22,7 @@ public abstract class BaseOperateEntity extends BaseIdEntity {
 
     @ApiModelProperty("创建时间")
     @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
+        private Date createTime;
 
     @ApiModelProperty("创建人")
     @TableField(fill = FieldFill.INSERT)

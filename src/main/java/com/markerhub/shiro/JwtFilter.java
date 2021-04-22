@@ -2,7 +2,6 @@ package com.markerhub.shiro;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.markerhub.common.lang.Result;
 import com.markerhub.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
@@ -70,7 +69,7 @@ public class JwtFilter extends AuthenticatingFilter {
 
         try {
         Throwable throwable = e.getCause() == null ? e : e.getCause();
-        Result fail = Result.error(throwable.getMessage());
+        Result<?> fail = Result.error(throwable.getMessage());
         String jsonStr = JSONUtil.toJsonStr(fail);
             httpServletResponse.getWriter().print(jsonStr);
         } catch (IOException ioException) {

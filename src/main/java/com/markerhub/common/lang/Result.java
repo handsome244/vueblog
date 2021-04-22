@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class Result<T> implements Serializable {
-    public static final Integer SUCCESS_CODE = 0;
+    public static final Integer SUCCESS_CODE = 200;
     public static final String SUCCESS_MESSAGE = "SUCCESS";
 
     public static final Integer COMMON_ERROR_CODE = 10000;

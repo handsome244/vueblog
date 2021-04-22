@@ -6,7 +6,6 @@ import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.markerhub.common.dto.LoginDTO;
-import com.markerhub.common.lang.Result;
 import com.markerhub.entity.User;
 import com.markerhub.mapper.UserMapper;
 import com.markerhub.service.UserService;
@@ -16,8 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotEmpty;
-import java.security.Security;
+import java.util.Map;
 
 /**
  * <p>
@@ -34,7 +32,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     JwtUtils jwtUtils;
 
     @Override
-    public Result login(LoginDTO loginDTO, HttpServletResponse response) {
+    public Map<Object, Object> login(LoginDTO loginDTO, HttpServletResponse response) {
         String username = loginDTO.getUsername();
         String password = loginDTO.getPassword();
 
@@ -49,13 +47,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String token = jwtUtils.generateToken(user.getId());
         response.setHeader("Authorization", token);
         response.setHeader("Access-control-Expose-Headers", "Authorization");
-        return Result.success(MapUtil.builder()
+        Map<Object, Object> map = MapUtil.builder()
                 .put("id", user.getId())
                 .put("username", user.getUsername())
                 .put("avatar", user.getAvatar())
                 .put("email", user.getEmail())
-                .put("token",token)
-                .map()
-        );
+                .map();
+        return map;
     }
 }

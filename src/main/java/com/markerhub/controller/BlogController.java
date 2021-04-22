@@ -36,13 +36,13 @@ public class BlogController {
     }
 
     @GetMapping("/list/{current}/{size}")
-    public Result<Pagination<Blog>> list(@PathVariable("current") Integer current, @PathVariable("size") Integer size) {
+    public Result<Pagination<Blog>> list(@PathVariable("current") Long current, @PathVariable("size") Long size) {
         Pagination<Blog> page = new Pagination<>(current, size);
         return Result.success(blogService.query(current,size,page));
     }
 
-    @GetMapping("/query")
-    public Result<Blog> query(@RequestParam() Long id) {
+    @GetMapping("/query/{id}")
+    public Result<Blog> query(@PathVariable("id") Long id) {
         Blog blog = blogService.getById(id);
         Assert.notNull(blog, "博客不存在");
         return Result.success(blog);
@@ -55,7 +55,7 @@ public class BlogController {
         return Result.success(blogService.removeById(id));
     }
 
-    @PutMapping("update/{id}")
+    @PutMapping("update")
     public Result<?> update(@RequestBody Blog param) {
         Long id = param.getId();
         Blog blog = blogService.getById(id);

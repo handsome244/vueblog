@@ -1,11 +1,11 @@
 package com.markerhub.service;
 
 import com.markerhub.common.dto.LoginDTO;
-import com.markerhub.common.lang.Result;
 import com.markerhub.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * <p>
@@ -23,5 +23,5 @@ public interface UserService extends IService<User> {
      * @param response
      * @return
      */
-    Result login(LoginDTO loginDTO, HttpServletResponse response);
+    Map<Object, Object> login(LoginDTO loginDTO, HttpServletResponse response);
 }

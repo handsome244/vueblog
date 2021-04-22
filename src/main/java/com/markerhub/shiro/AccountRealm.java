@@ -4,7 +4,6 @@ import cn.hutool.core.bean.BeanUtil;
 import com.markerhub.entity.User;
 import com.markerhub.service.UserService;
 import com.markerhub.utils.JwtUtils;
-import com.markerhub.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -30,6 +29,7 @@ public class AccountRealm extends AuthorizingRealm {
 
     /**
      * 为了让realm支持jwt的凭证校验
+     *
      * @param token
      * @return
      */
@@ -40,27 +40,32 @@ public class AccountRealm extends AuthorizingRealm {
 
     /**
      * 权限校验
+     *
      * @param token
      * @return
      * @throws AuthenticationException
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        JwtToken jwtToken = (JwtToken)token;
+        JwtToken jwtToken = (JwtToken) token;
         log.info("jwtToken----------------->{}", jwtToken);
         String userId = jwtUtils.getClaimByToken((String) jwtToken.getPrincipal()).getSubject();
         User user = userService.getById(Long.parseLong(userId));
-        if(user == null){
+        if (user == null) {
             throw new UnknownAccountException("账户不存在");
         }
-        if(user.getStatus() == -1){
+        if (user.getStatus() == -1) {
             throw new LockedAccountException("账户已被锁定");
         }
-        return new SimpleAuthenticationInfo(user,jwtToken.getCredentials(),getName());
+        AccountProfile profile = new AccountProfile();
+        BeanUtil.copyProperties(user, profile);
+        log.info("profile-------------->{}", profile);
+        return new SimpleAuthenticationInfo(user, jwtToken.getCredentials(), getName());
     }
 
     /**
      * 登录认证校验
+     *
      * @param principalCollection
      * @return
      */
